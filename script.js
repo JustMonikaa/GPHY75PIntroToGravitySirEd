@@ -6,20 +6,15 @@ let debugNationIndex = 0;
 
 document.addEventListener('contextmenu', event => event.preventDefault());
 document.addEventListener('keydown', event => {
-  // Anti-cheat
   if (event.key === 'F12' || (event.ctrlKey && event.shiftKey && (event.key === 'I' || event.key === 'C' || event.key === 'J'))) {
     event.preventDefault();
   }
   
-  // Debug mode trigger (Hold R for exactly 7 seconds on the intro screen)
   if ((event.key === 'r' || event.key === 'R') && !rKeyPressed && _TR.phase === 'intro') {
     rKeyPressed = true;
-    rKeyTimer = setTimeout(() => {
-      _triggerDebugMode();
-    }, 7000);
+    rKeyTimer = setTimeout(() => { _triggerDebugMode(); }, 7000);
   }
 
-  // Debug mode navigation
   if (isDebugMode) {
     const keysLength = Object.keys(_NATIONS).length;
     if (event.key === 'ArrowRight') {
@@ -57,7 +52,6 @@ function _renderDebugNation() {
   _renderResult("Admin (Debug)", { nation: keys[debugNationIndex], stats: dummyStats }, 999);
 }
 
-// Disable Copy/Cut/Paste Actions Globally
 ['copy', 'cut', 'paste'].forEach(ev => {
   document.addEventListener(ev, (e) => {
     e.preventDefault();
@@ -65,7 +59,7 @@ function _renderDebugNation() {
   });
 });
 
-// ===== 10 DOMAIN DATA SETS =====
+// ===== 10 DOMAIN DATA SETS WITH GENERATORS =====
 const domainData = [
   {
     isInput: false,
@@ -165,27 +159,45 @@ const domainData = [
     <div style="text-align:center; margin: 10px 0; font-size:1.1rem;">$F_g = G \\frac{m_1 m_2}{r^2}$</div>
     Where $G = 6.67 \\times 10^{-11} \\text{ N}\\cdot\\text{m}^2/\\text{kg}^2$.<br><br>
     <b>PROMPT:</b> Your final answer must be written with <b>exactly two decimal places</b> and must include the unit (e.g., <code>123.45 N</code>).`,
-    question: "Given: $m_1 = 300,000 \\text{ kg}$, $m_2 = 400,000 \\text{ kg}$, and the distance $r = 2 \\text{ m}$. Calculate $F_g$.",
-    correctValue: 200.10,
-    explanation: "$F_g = (6.67 \\times 10^{-11}) \\times \\frac{(300,000 \\times 400,000)}{2^2} = 200.10 \\text{ N}$"
+    generate: () => {
+      const m1 = (Math.floor(Math.random() * 40) + 10) * 10000;
+      const m2 = (Math.floor(Math.random() * 40) + 10) * 10000;
+      const r = Math.floor(Math.random() * 8) + 2; 
+      const fg = (6.67e-11 * m1 * m2) / (r * r);
+      const q = `Two massive mining freighters drift in the silent void of space. The first vessel has a mass of ${m1.toLocaleString()} kg, while the second vessel has a mass of ${m2.toLocaleString()} kg. Their centers of mass are currently separated by a distance of ${r} meters. Calculate the exact gravitational force pulling them together.`;
+      const expl = `$F_g = (6.67 \\times 10^{-11}) \\times \\frac{(${m1.toLocaleString()} \\times ${m2.toLocaleString()})}{${r}^2} = ${fg.toFixed(2)} \\text{ N}$`;
+      return { question: q, correctValue: fg, explanation: expl };
+    }
   },
   {
     isInput: true,
     title: "Chamber 9 — Abyssal Calculation II",
     lecture: `<b>WARNING: PROTOCOL OVERRIDE</b><br><br>Remember to double check your exponents. $10^{-11}$ is a very small number, but massive objects still exert considerable force. <br><br>
     <b>PROMPT:</b> Your final answer must be written with <b>two decimal places</b>, including the unit (e.g., <code>123.45 N</code>).`,
-    question: "Given: $m_1 = 5,000,000 \\text{ kg}$, $m_2 = 6,000,000 \\text{ kg}$, and the distance $r = 50 \\text{ m}$. Calculate $F_g$.",
-    correctValue: 800.40,
-    explanation: "$F_g = (6.67 \\times 10^{-11}) \\times \\frac{(5,000,000 \\times 6,000,000)}{50^2} = 800.40 \\text{ N}$"
+    generate: () => {
+      const m1 = (Math.floor(Math.random() * 50) + 20) * 100000; 
+      const m2 = (Math.floor(Math.random() * 50) + 20) * 100000;
+      const r = Math.floor(Math.random() * 40) + 10; 
+      const fg = (6.67e-11 * m1 * m2) / (r * r);
+      const q = `During a routine orbital maneuver, an abandoned satellite with a mass of ${m1.toLocaleString()} kg enters the vicinity of an abyssal research station with a mass of ${m2.toLocaleString()} kg. The distance between their centers is exactly ${r} meters. Determine the mutual gravitational force acting between the two bodies.`;
+      const expl = `$F_g = (6.67 \\times 10^{-11}) \\times \\frac{(${m1.toLocaleString()} \\times ${m2.toLocaleString()})}{${r}^2} = ${fg.toFixed(2)} \\text{ N}$`;
+      return { question: q, correctValue: fg, explanation: expl };
+    }
   },
   {
     isInput: true,
     title: "Chamber 10 — The Final Calculation",
     lecture: `<b>WARNING: PROTOCOL OVERRIDE</b><br><br>This is the final trial of the domain. Ensure your computation is perfectly aligned. <br><br>
     <b>PROMPT:</b> Your final answer must be written with <b>two decimal places</b>, including the unit (e.g., <code>123.45 N</code>).`,
-    question: "Given: $m_1 = 2,500,000 \\text{ kg}$, $m_2 = 4,000,000 \\text{ kg}$, and the distance $r = 20 \\text{ m}$. Calculate $F_g$.",
-    correctValue: 166.75,
-    explanation: "$F_g = (6.67 \\times 10^{-11}) \\times \\frac{(2,500,000 \\times 4,000,000)}{20^2} = 166.75 \\text{ N}$"
+    generate: () => {
+      const m1 = (Math.floor(Math.random() * 90) + 10) * 1000000; 
+      const m2 = (Math.floor(Math.random() * 90) + 10) * 1000000;
+      const r = Math.floor(Math.random() * 50) + 20; 
+      const fg = (6.67e-11 * m1 * m2) / (r * r);
+      const q = `In the deepest layer of the domain, two celestial fragments orbit a dark singularity. The first fragment boasts a mass of ${m1.toLocaleString()} kg, and the second has an immense mass of ${m2.toLocaleString()} kg. If they are separated by a precise distance of ${r} meters, what is the exact gravitational force exerted between them?`;
+      const expl = `$F_g = (6.67 \\times 10^{-11}) \\times \\frac{(${m1.toLocaleString()} \\times ${m2.toLocaleString()})}{${r}^2} = ${fg.toFixed(2)} \\text{ N}$`;
+      return { question: q, correctValue: fg, explanation: expl };
+    }
   }
 ];
 
@@ -254,6 +266,23 @@ function renderStage(index) {
   const data = domainData[index];
   let interactionHTML = '';
   let options = [];
+  
+  // Generate randomized calculation problem if available
+  if (data.generate && !data.generated) {
+      const gen = data.generate();
+      data.question = gen.question;
+      data.correctValue = gen.correctValue;
+      data.explanation = gen.explanation;
+      data.generated = true; 
+  }
+
+  // Intense red glitch trigger for the first calculation problem (Chamber 8 / index 7)
+  if (index === 7) {
+      document.body.classList.add('abyssal-glitch-active');
+      setTimeout(() => {
+          document.body.classList.remove('abyssal-glitch-active');
+      }, 600);
+  }
   
   if (data.isInput) {
     interactionHTML = `
@@ -535,7 +564,7 @@ function _runAnalysis() {
 // ===== ANALYSIS ENGINE (UPDATED FOR ASYNC LECTURE) =====
 function _analyzeNation(name) {
   var t = _TR;
-  var totalSec = (t.totalTime || 1) / 1000; // Time spent on the 10 questions only
+  var totalSec = (t.totalTime || 1) / 1000; 
   var numSectors = 10;
   var correct = t.score;
   var tabs = t.tabSwitches;
@@ -546,9 +575,8 @@ function _analyzeNation(name) {
   var validSectors = t.sectorData.filter(s => s != null);
   var avgRead = validSectors.reduce((a, s) => a + (s.readTime || 30000), 0) / numSectors / 1000;
 
-  // Video is ~19 mins (1140 seconds). 
-  var skippedVideo = videoWatchSec < 120; // less than 2 mins
-  var watchedVideo = videoWatchSec > 480; // more than 8 mins
+  var skippedVideo = videoWatchSec < 120; 
+  var watchedVideo = videoWatchSec > 480; 
 
   var isCheater = (tabs >= 3 || cpCount >= 2 || (skippedVideo && correct === 10 && avgRead < 15));
   var isImpulsive = (skippedVideo && correct < 7) || (avgRead < 10 && correct < 7);
@@ -577,7 +605,6 @@ function _analyzeNation(name) {
       sc.Mondstadt += 50;
   }
 
-  // Nuance modifiers
   sc.Mondstadt += (totalSec < 600 ? 5 : 0);
   sc.Liyue += (watchedVideo ? 10 : 0);
   sc.Inazuma += (tabs === 0 ? 10 : 0);
