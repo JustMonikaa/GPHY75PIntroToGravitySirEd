@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spiral Abyss: Physics Domain</title>
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- KaTeX for LaTeX rendering -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+<!-- html2canvas for saving the image -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<!-- External Stylesheet -->
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<!-- Background Music for Nation Screen -->
+<audio id="nation-bgm" src="./againstallodds.mp3" loop preload="auto"></audio>
+
+<div id="abyss-bg">
+  <div class="stars"></div>
+  <div class="stars stars2"></div>
+  <div class="spiral"></div>
+</div>
+
+<div class="progress-shell" id="progressShell">
+  <div class="progress-inner">
+    <span class="hud" id="hudSector">CHAMBER 1/10</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <span class="hud">STARS <b id="hudScore">0</b></span>
+  </div>
+</div>
+
+<div class="wrap" id="main-wrap">
+  <!-- INTRO STAGE -->
+  <div class="card stage active" id="introStage">
+    <div class="domain-tag" style="text-align: center;">Spiral Abyss: Floor STEM1204</div>
+    <h1 style="text-align: center;">Physics Domain:<br>Newton's Law of Gravitation</h1>
+    <p class="intro-text" style="text-align: center;">
+      Welcome to your expedition into the mechanics of the universe. In this domain, you will explore the origins of gravity, the profound realizations of Newton, and calculate gravitational forces.
+    </p>
+    <div class="meta-row" style="justify-content: center;">
+      <span class="chip">10 CHAMBERS</span>
+      <span class="chip">SELF-PACED MODULE</span>
+    </div>
+    <p class="intro-text" style="text-align: center; color: var(--border-gold);">You must review the archive footage below before the domain doors will open.</p>
+    <br>
+    <div style="text-align: center;">
+      <button class="btn yt-btn" id="intro-yt-btn" style="width:100%; margin-bottom: 20px;">🔍 VIEW MANDATORY ARCHIVE FOOTAGE</button>
+      <button class="btn" id="commence-btn" disabled style="opacity:0.5; width:100%;">COMMENCE EXPLORATION</button>
+    </div>
+  </div>
+
+  <!-- DYNAMIC STAGES CONTAINER -->
+  <div id="stage-container"></div>
+</div>
+
+<!-- YOUTUBE MODAL -->
+<div id="yt-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <span class="modal-title">Irminsul Archive Footage</span>
+      <span class="close-modal" id="close-yt">&times;</span>
+    </div>
+    <div class="iframe-container">
+      <iframe id="yt-iframe" src="" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    </div>
+    <div class="yt-fallback-container">
+      <a id="yt-fallback-link" href="#" target="_blank">Video blocked? Click here to open the footage directly on YouTube.</a>
+    </div>
+  </div>
+</div>
+
+<!-- TRACKER OVERLAY -->
+<div id="tracker-overlay">
+  <div class="tr-inner">
+    <div id="name-phase">
+      <div class="card" style="margin-top: 10vh;">
+        <div class="domain-tag" style="text-align: center;">Abyssal Assessment</div>
+        <h2 style="font-family: var(--title-font); color: var(--border-gold); text-align: center; margin-bottom: 20px; font-size: 2rem;">Seal Your Record</h2>
+        <p style="color: var(--text-muted); text-align: center; margin-bottom: 30px; line-height: 1.6;">
+          Your introductory expedition is complete. Enter your name below to log your asynchronous activity and lock your record into the Irminsul.
+        </p>
+        <input type="text" id="tr-name-input" placeholder="Enter your name..." maxlength="40" autocomplete="off">
+        <button class="btn" id="tr-submit" style="width: 100%;" disabled>SEAL THE RECORD</button>
+      </div>
+    </div>
+    <div id="result-phase">
+      <div id="result-content"></div>
+      <div class="action-buttons">
+        <button class="btn ghost" onclick="location.reload()">↺ CHALLENGE AGAIN</button>
+        <button class="btn" onclick="saveResultImage()">⬇ SAVE RECORD IMAGE</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="./script.js"></script>
+</body>
+</html>
